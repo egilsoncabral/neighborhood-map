@@ -7,9 +7,12 @@ import MapContainer from './components/MapContainer'
 class App extends Component {
   render() {
     return (
-      <div className="container">
-          <NavBar />
-          <MapContainer />
+      <div>
+          <div className="row">
+            <NavBar />
+            <MapContainer />
+          </div>
+          
       </div>
     );
   }
