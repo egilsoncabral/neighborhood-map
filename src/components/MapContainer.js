@@ -31,51 +31,42 @@ export class MapContainer extends Component {
     }
   };
 
+  createMarkers() {
+    var listMarkers = this.props.venues.map((item) =>
+        <Marker key={item.venue.id}
+          onClick={this.onMarkerClick}
+          position={{
+            lat: item.venue.location.lat,
+            lng: item.venue.location.lng
+          }}
+        />
+        <InfoWindow
+          marker={this.state.activeMarker}
+          visible={this.state.showingInfoWindow}
+          onClose={this.onClose}
+        >
+          <div>
+            <InfoWindowContent venue={item.venue}/>
+          </div>
+        </InfoWindow>
+    )
+    return listMarkers;
+  }
+
   render() {
+
     return (
       <div>
-      <Map
-        google={this.props.google}
-        zoom={13}
-        style={mapStyles}
-        initialCenter={{
-         lat: -5.812757,
-         lng: -35.255127
-        }}
-      >
-      <Marker
-          onClick={this.onMarkerClick}
-          position={{
-          lat: -5.8663,
-          lng: -35.1855
+        <Map
+          google={this.props.google}
+          zoom={13}
+          style={mapStyles}
+          initialCenter={{
+            lat: -5.812757,
+            lng: -35.255127
           }}
-        />
-        <InfoWindow
-          marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow}
-          onClose={this.onClose}
         >
-          <div>
-            <InfoWindowContent />
-          </div>
-        </InfoWindow>
-        <Marker
-          onClick={this.onMarkerClick}
-          position={{
-          lat: -5.8127,
-          lng: -35.2055
-          }}
-        />
-        <InfoWindow
-          marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow}
-          onClose={this.onClose}
-        >
-          <div>
-            <InfoWindowContent />
-          </div>
-        </InfoWindow>
-        
+          {this.createMarkers()}
         </Map>
        </div>
     );
