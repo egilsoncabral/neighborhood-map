@@ -15,9 +15,9 @@ export class MapContainer extends Component {
     selectedPlace: {}          //Shows the infoWindow to the selected place upon a marker
   };
 
-  onMarkerClick = (props, marker, e) =>
+  onMarkerClick = (props, marker) =>
     this.setState({
-      selectedPlace: props,
+      selectedPlace: props.item,
       activeMarker: marker,
       showingInfoWindow: true
     });
@@ -32,23 +32,18 @@ export class MapContainer extends Component {
   };
 
   createMarkers() {
-    var listMarkers = this.props.venues.map((item) =>
+    var listMarkers = this.props.venues.map(item =>
         <Marker key={item.venue.id}
           onClick={this.onMarkerClick}
           position={{
             lat: item.venue.location.lat,
             lng: item.venue.location.lng
           }}
-        />
-        <InfoWindow
-          marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow}
-          onClose={this.onClose}
+          item={item}
         >
-          <div>
-            <InfoWindowContent venue={item.venue}/>
-          </div>
-        </InfoWindow>
+        
+        </Marker>
+       
     )
     return listMarkers;
   }
@@ -67,6 +62,15 @@ export class MapContainer extends Component {
           }}
         >
           {this.createMarkers()}
+          <InfoWindow
+          marker={this.state.activeMarker}
+          visible={this.state.showingInfoWindow}
+          onClose={this.onClose}
+        >
+          <div>
+            <InfoWindowContent venue={this.state.selectedPlace.venue}/>
+          </div>
+        </InfoWindow>
         </Map>
        </div>
     );
