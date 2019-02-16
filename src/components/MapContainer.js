@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import InfoWindowContent from './InfoWindowContent';
 
@@ -12,15 +13,27 @@ export class MapContainer extends Component {
   state = {
     showingInfoWindow: false,  //Hides or the shows the infoWindow
     activeMarker: {},          //Shows the active marker upon click
-    selectedPlace: {}          //Shows the infoWindow to the selected place upon a marker
   };
 
-  onMarkerClick = (props, marker) =>
+  getVenueDetail(contentId) {
+    let url = new URL(`https://api.foursquare.com/v2/venues/${contentId}`);
+    url.search = new URLSearchParams({client_id: 'BD0OWKRXZ0K4EYTMPEMGRBRY4ZJHSIKT5OXTAMQDTL0LMBDV', 
+    client_secret: 'OMP2T5YLQ32NZIXLJBNXCDZI0U1PW3O5UXNXCGVE3AYVIPXC', v: "20181025"});
+
+
+    fetch(url)
+    .then(response => response.json()).then(response => {
+      this.createInfoWindow(response.response.venue)
+    });
+  } 
+
+  onMarkerClick = (props, marker) => {
     this.setState({
-      selectedPlace: props.item,
       activeMarker: marker,
       showingInfoWindow: true
     });
+    this.getVenueDetail(props.item.venue.id)
+  }  
 
   onClose = props => {
     if (this.state.showingInfoWindow) {
@@ -48,6 +61,14 @@ export class MapContainer extends Component {
     return listMarkers;
   }
 
+  createInfoWindow(venue){
+    let infoContent = []
+    infoContent.push(
+      <InfoWindowContent venue={venue}/>
+    )
+    ReactDOM.render(infoContent, document.getElementById('info-window-content'));
+  }
+
   render() {
 
     return (
@@ -67,8 +88,7 @@ export class MapContainer extends Component {
           visible={this.state.showingInfoWindow}
           onClose={this.onClose}
         >
-          <div>
-            <InfoWindowContent venue={this.state.selectedPlace.venue}/>
+          <div id="info-window-content">
           </div>
         </InfoWindow>
         </Map>
