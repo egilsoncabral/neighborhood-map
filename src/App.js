@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import NavBar from './components/NavBar'
 import MapContainer from './components/MapContainer'
+import SideMenu from './components/SideMenu';
 
 class App extends Component {
 
@@ -45,6 +46,7 @@ class App extends Component {
       <div>
           <div className="row">
             <NavBar />
+            <SideMenu />
             <MapContainer venues={this.state.venues}/>
           </div>
           

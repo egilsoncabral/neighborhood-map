@@ -14,7 +14,7 @@ export default class InfoWindowContent extends Component{
                         {venue !== undefined && venue.bestPhoto ? 
                             <img src={venue.bestPhoto.prefix + '248x140' + venue.bestPhoto.suffix} alt={venue.name + 'provided by foursquare'}/> : 
                             <img src={NoPicture} height="140" width="248"/> }
-                       <hr/>     
+                       <div class="divider"></div>   
                     </div>
                     
                     <div className="row">
