@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import InfoWindowContent from './InfoWindowContent';
+import Loader from './Loader';
 
 const mapStyles = {
   width: '100%',
@@ -10,20 +11,34 @@ const mapStyles = {
 
 export class MapContainer extends Component {
 
-  state = {
-    showingInfoWindow: false,  //Hides or the shows the infoWindow
-    activeMarker: {},          //Shows the active marker upon click
-  };
+  constructor() {
+    
+    
+    super();
 
-  getVenueDetail(contentId) {
+    this.state = {
+      showingInfoWindow: false,  //Hides or the shows the infoWindow
+      activeMarker: {},          //Shows the active marker upon click
+    };
+
+    this.createInfoWindow = this.createInfoWindow.bind(this)
+  }
+
+
+
+  getVenueDetail(contentId, marker) {
+    let infoWindow = this.createInfoWindow;
     let url = new URL(`https://api.foursquare.com/v2/venues/${contentId}`);
     url.search = new URLSearchParams({client_id: 'BD0OWKRXZ0K4EYTMPEMGRBRY4ZJHSIKT5OXTAMQDTL0LMBDV', 
     client_secret: 'OMP2T5YLQ32NZIXLJBNXCDZI0U1PW3O5UXNXCGVE3AYVIPXC', v: "20181025"});
 
-
+    Loader.showComponent()
     fetch(url)
     .then(response => response.json()).then(response => {
-      this.createInfoWindow(response.response.venue)
+      setTimeout(function() {
+        infoWindow(response.response.venue)
+      }, 800);
+      
     });
   } 
 
@@ -32,7 +47,7 @@ export class MapContainer extends Component {
       activeMarker: marker,
       showingInfoWindow: true
     });
-    this.getVenueDetail(props.item.venue.id)
+    this.getVenueDetail(props.item.venue.id, marker)
   }  
 
   onClose = props => {
@@ -45,6 +60,7 @@ export class MapContainer extends Component {
   };
 
   createMarkers() {
+    Loader.hideComponent()
     var listMarkers = this.props.venues.map(item =>
         <Marker key={item.venue.id}
           onClick={this.onMarkerClick}
@@ -66,6 +82,7 @@ export class MapContainer extends Component {
     infoContent.push(
       <InfoWindowContent venue={venue}/>
     )
+    Loader.hideComponent()
     ReactDOM.render(infoContent, document.getElementById('info-window-content'));
   }
 
@@ -92,6 +109,7 @@ export class MapContainer extends Component {
           </div>
         </InfoWindow>
         </Map>
+        <Loader/>
        </div>
     );
   }

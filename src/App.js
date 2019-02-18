@@ -5,22 +5,28 @@ import NavBar from './components/NavBar'
 import MapContainer from './components/MapContainer'
 import SideMenu from './components/SideMenu';
 
+const NEAR = 'Natal';
+const RADIUS = '3000';
 class App extends Component {
+  
 
   constructor() {
+    
     
     super();
 
     this.state = {
       venues: []
     };
+
+    this.getVenues = this.getVenues.bind(this)
   }
 
   componentDidMount() {
     this.getVenues()
   }
 
-  getVenues() {
+  getVenues(categorie) {
     let setVenueState = this.setState.bind(this);
 
     const venuesEndpoint = 'https://api.foursquare.com/v2/venues/explore?';
@@ -29,9 +35,10 @@ class App extends Component {
       client_id: 'BD0OWKRXZ0K4EYTMPEMGRBRY4ZJHSIKT5OXTAMQDTL0LMBDV', //Client ID obtained by getting developer access
       client_secret: 'OMP2T5YLQ32NZIXLJBNXCDZI0U1PW3O5UXNXCGVE3AYVIPXC', //Client Secret obtained by getting developer access
       limit: 100, //The max number of venues to load
-      query: 'Restaurants', //The type of venues we want to query
+      query: categorie ? categorie :'Restaurants', //The type of venues we want to query
       v: '20181025', //The version of the API.
-      ll: '-5.8663,-35.2055' //The latitude and longitude of Charing Cross, London
+      near: NEAR,
+      radius: RADIUS //The latitude and longitude of Natal - RN
     };
 
     fetch(venuesEndpoint + new URLSearchParams(params), {
@@ -46,7 +53,7 @@ class App extends Component {
       <div>
           <div className="row">
             <NavBar />
-            <SideMenu />
+            <SideMenu getVenues={this.getVenues}/>
             <MapContainer venues={this.state.venues}/>
           </div>
           
