@@ -15,6 +15,8 @@ export default class Loader extends Component{
     }
 
     static hideComponent(){
+        $('.modalPreloader').attr('style','display:none !important');
+        $('.modal').attr('style','display:none !important');
         $('#modalPreloader').hide()
         $('.modal-overlay').hide()
     }

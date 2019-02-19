@@ -11,17 +11,23 @@ const mapStyles = {
 
 export class MapContainer extends Component {
 
-  constructor() {
+  constructor(props) {
     
     
-    super();
-
+    super(props);
     this.state = {
       showingInfoWindow: false,  //Hides or the shows the infoWindow
-      activeMarker: {},          //Shows the active marker upon click
+      activeMarker: {}          //Shows the active marker upon click
     };
-
+    
     this.createInfoWindow = this.createInfoWindow.bind(this)
+  }
+
+  // Load Map with restaurants markers
+  mapLoad(map) {
+    if(map !== null) {
+      this.setState({map: map});
+    }
   }
 
 
@@ -61,19 +67,26 @@ export class MapContainer extends Component {
 
   createMarkers() {
     Loader.hideComponent()
+    //create bounds for the map with the actual markers
+    const bounds = new this.props.google.maps.LatLngBounds();
     var listMarkers = this.props.venues.map(item =>
-        <Marker key={item.venue.id}
+        {const marker = <Marker key={item.venue.id}
           onClick={this.onMarkerClick}
           position={{
             lat: item.venue.location.lat,
             lng: item.venue.location.lng
           }}
           item={item}
-        >
-        
-        </Marker>
-       
+        />
+        bounds.extend(marker.props.position);
+        return marker;
+        }
     )
+    var currentMap = this.refs.currentMap
+    if (currentMap !== undefined) {
+      currentMap.map.fitBounds(bounds)
+    }
+    
     return listMarkers;
   }
 
@@ -93,6 +106,7 @@ export class MapContainer extends Component {
         <Map
           google={this.props.google}
           zoom={13}
+          ref='currentMap'
           style={mapStyles}
           initialCenter={{
             lat: -5.812757,

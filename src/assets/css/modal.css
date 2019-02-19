@@ -90,6 +90,10 @@
     top: 30% !important;
     width: 10rem !important;
     max-width: 10rem !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden !important;
 }
 
 /************************************
