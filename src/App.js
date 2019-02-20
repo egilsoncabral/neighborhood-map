@@ -4,6 +4,7 @@ import './App.css';
 import NavBar from './components/NavBar'
 import MapContainer from './components/MapContainer'
 import SideMenu from './components/SideMenu';
+import SearchList from './components/SearchList';
 
 const NEAR = 'Natal';
 const RADIUS = '3000';
@@ -55,6 +56,7 @@ class App extends Component {
             <NavBar />
             <SideMenu getVenues={this.getVenues}/>
             <MapContainer venues={this.state.venues}/>
+            <SearchList/>
           </div>
           
       </div>
