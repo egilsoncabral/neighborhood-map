@@ -1,5 +1,6 @@
 import React ,{Component} from 'react'
 import M from 'materialize-css'
+import $ from 'jquery'
 
 export default class NavBar extends Component{
 
@@ -17,6 +18,8 @@ export default class NavBar extends Component{
         componente.init(document.querySelector('#searchlist'),{edge:'right'}).el
         )
       element.open()
+      $('#input-search').removeAttr('value');
+      this.props.loadVenueList()
     }
 
 
@@ -27,7 +30,7 @@ export default class NavBar extends Component{
               <a id="nav-menu" href="#" data-target="slide-out" onClick={() => this.openMenu()}><i className="material-icons">menu</i></a>
               </div>
               <div className="col">
-              <a href="!#"><h5>Neighborhood Map</h5></a>
+              <a href="!#"><h5>Natal City Places Map</h5></a>
               </div>
               <div className="col right">
               <a href="#" onClick={() => this.openSearchList()}><i className="material-icons">search</i></a>

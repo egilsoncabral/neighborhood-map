@@ -83,7 +83,7 @@ export class MapContainer extends Component {
         }
     )
     var currentMap = this.refs.currentMap
-    if (currentMap !== undefined) {
+    if (currentMap !== undefined && listMarkers.length > 1) {
       currentMap.map.fitBounds(bounds)
     }
     

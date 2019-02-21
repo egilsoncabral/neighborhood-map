@@ -17,10 +17,15 @@ class App extends Component {
     super();
 
     this.state = {
-      venues: []
+      venues: [],
+      showVenues:[],
+      query: ''
     };
 
     this.getVenues = this.getVenues.bind(this)
+    this.searchByName = this.searchByName.bind(this)
+    this.searchById = this.searchById.bind(this)
+    this.loadVenueList = this.loadVenueList.bind(this)
   }
 
   componentDidMount() {
@@ -45,18 +50,48 @@ class App extends Component {
     fetch(venuesEndpoint + new URLSearchParams(params), {
       method: 'GET'
     }).then(response => response.json()).then(response => {
-      setVenueState({venues: response.response.groups[0].items}); //Set the components state
+      setVenueState({venues: response.response.groups[0].items, showVenues: response.response.groups[0].items}); //Set the components state
     });
+  }
+
+  searchByName(query){
+    if(query !== ''){   
+      //only show the venues that pass the query filter
+      let showVenues = this.state.venues.slice();
+      showVenues = showVenues.filter(value => {
+        const name = value.venue.name.toUpperCase().trim();
+        const searchName = query.toUpperCase().trim();
+        return name.includes(searchName);
+      });
+      this.setState({showVenues: showVenues, query:query});
+    }
+  }
+
+  //Used to show a single venue
+  searchById(venueId){
+    if(venueId !== ''){ 
+       let showVenues = this.state.venues.slice();
+       showVenues = showVenues.filter(value => {
+         const name = value.venue.id;
+         const searchName = venueId;
+         return name.includes(searchName);
+       });
+       this.setState({showVenues: showVenues});
+    }
+  }
+
+  loadVenueList(){
+    this.setState({showVenues:this.state.venues, query:''})
   }
   
   render() {
     return (
       <div>
           <div className="row">
-            <NavBar />
+            <NavBar loadVenueList={this.loadVenueList}/>
             <SideMenu getVenues={this.getVenues}/>
-            <MapContainer venues={this.state.venues}/>
-            <SearchList/>
+            <MapContainer venues={this.state.showVenues}/>
+            <SearchList venues={this.state.showVenues} searchByName={this.searchByName} searchById={this.searchById} query={this.state.query}/>
           </div>
           
       </div>
