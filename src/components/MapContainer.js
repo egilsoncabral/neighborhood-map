@@ -14,19 +14,18 @@ export class MapContainer extends Component {
     
     super(props);
     this.state = {
-      activeMarker: {},          //Shows the active marker upon click
+      activeMarker: null,          //Shows the active marker upon click
       selectedVenue:null
     };
     
   }
 
-  getVenueDetail(contentId) {
+  getVenueDetail(contentId, marker) {
     let currentContext = this;
     let url = new URL(`https://api.foursquare.com/v2/venues/${contentId}`);
     url.search = new URLSearchParams({client_id: 'BD0OWKRXZ0K4EYTMPEMGRBRY4ZJHSIKT5OXTAMQDTL0LMBDV', 
     client_secret: 'OMP2T5YLQ32NZIXLJBNXCDZI0U1PW3O5UXNXCGVE3AYVIPXC', v: "20181025"});
 
-    Loader.showComponent()
     fetch(url)
     .then(this.props.handleRequestErrors).then(response => {
       setTimeout(function() {
@@ -43,7 +42,11 @@ export class MapContainer extends Component {
     });
     this.props.contexto.setState({showingInfoWindow: true})
     this.getVenueDetail(props.item.venue.id, marker)
-  }  
+  } 
+  
+  componentWillUpdate(){
+    
+  }
 
   onClose = () => {
     if (this.props.showingInfoWindow) {
@@ -59,8 +62,9 @@ export class MapContainer extends Component {
     //create bounds for the map with the actual markers
     const bounds = new this.props.google.maps.LatLngBounds();
     var listMarkers = this.props.venues.map(item =>
-        {const marker = <Marker key={item.venue.id}
+        {const marker = <Marker key={item.venue.id} ref={item.venue.id}
           onClick={this.onMarkerClick}
+          animation={this.state.activeMarker !== null ? (item.venue.id === this.state.activeMarker.item.venue.id ? '1' : '0') : '0'} 
           position={{
             lat: item.venue.location.lat,
             lng: item.venue.location.lng

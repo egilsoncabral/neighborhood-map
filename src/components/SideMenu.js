@@ -1,21 +1,27 @@
-import React, {Component} from 'react'
+import React from 'react'
+import PropTypes from 'prop-types';
+import FourSquareLogo from '../assets/img/foursquare_social.png'
 
-export default class SideMenu extends Component{
-
-    render(){
-        var props = this.props
+const SideMenu = ({getVenues}) => {
         return(
             <div>
                 <ul id="slide-out" className="sidenav">
                     <li><a href="#!" className="subheader"><h5>Natal Places</h5></a></li>
                     <li><div className="divider"></div></li>
-                    <li><a className="waves-effect sidenav-close" href="#!" value="restaurant" onClick={() => props.getVenues('restaurant')}><i className="material-icons">restaurant</i>Restaurants</a></li>
-                    <li><a className="waves-effect sidenav-close" href="#!" value="pubs" onClick={() => props.getVenues('pubs')}><i className="material-icons">local_bar</i>Pubs</a></li>
-                    <li><a className="waves-effect sidenav-close" href="#!" value="shoppings" onClick={() => props.getVenues('mall')}><i className="material-icons">local_mall</i>Malls</a></li>
-                    <li><a className="waves-effect sidenav-close" href="#!" value="parks" onClick={() => props.getVenues('parks')}><i className="material-icons">local_florist</i>Parks</a></li>
-                    <li><a className="waves-effect sidenav-close" href="#!" value="hotel" onClick={() => props.getVenues('hotel')}><i className="material-icons">local_hotel</i>Hotels</a></li>
+                    <li><a className="waves-effect sidenav-close" href="#!" aria-label="restaurant" value="restaurant" onClick={() => getVenues('restaurant')}><i className="material-icons">restaurant</i>Restaurants</a></li>
+                    <li><a className="waves-effect sidenav-close" href="#!" aria-label="pubs" value="pubs" onClick={() => getVenues('pubs')}><i className="material-icons">local_bar</i>Pubs</a></li>
+                    <li><a className="waves-effect sidenav-close" href="#!" aria-label="shoppings" value="shoppings" onClick={() => getVenues('mall')}><i className="material-icons">local_mall</i>Malls</a></li>
+                    <li><a className="waves-effect sidenav-close" href="#!" aria-label="parks" value="parks" onClick={() => getVenues('parks')}><i className="material-icons">local_florist</i>Parks</a></li>
+                    <li><a className="waves-effect sidenav-close" href="#!" aria-label="hotel" value="hotel" onClick={() => getVenues('hotel')}><i className="material-icons">local_hotel</i>Hotels</a></li>
+                    <li><div className="divider"></div></li>
+                    <li style={{textAlign:'right'}}><a className="waves-effect sidenav-close" aria-label='Powered by foursquare' href="https://pt.foursquare.com/" value="foursquare" target="_blank" rel="noopener noreferrer">Powered by <img src={FourSquareLogo} height="25" width="25" alt="foursquare logo" style={{top:'7px', left:'5px'}}/></a></li>
                 </ul>
             </div>
         )
-    }
-}
+};
+
+SideMenu.propTypes ={
+    getVenues: PropTypes.func.isRequired
+};
+
+export default SideMenu;
