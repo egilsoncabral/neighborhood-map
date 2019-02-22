@@ -22,7 +22,7 @@ This project, is part of the training Nanodegree of Udacity. The goal of the pro
 ## Important
 
 - This application uses API's from Google maps and Foursquare, and developer free plans are only limited to a certain number of requests per day so you may experience not being able to load content.
-- The service worker is only functional in production mode hat is deploying to the github pages(Please try it on the hosted site).
+- The service worker is only functional in production mode hat is deploying to the github pages.
 
 ## Used Tools
 
