@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import NavBar from './components/NavBar'
 import MapContainer from './components/MapContainer'
@@ -19,13 +18,24 @@ class App extends Component {
     this.state = {
       venues: [],
       showVenues:[],
-      query: ''
+      query: '',
+      showingInfoWindow: false
     };
 
     this.getVenues = this.getVenues.bind(this)
     this.searchByName = this.searchByName.bind(this)
     this.searchById = this.searchById.bind(this)
     this.loadVenueList = this.loadVenueList.bind(this)
+    this.handleRequestErrors = this.handleRequestErrors.bind(this)
+  }
+
+  // Handle fetch request erros
+  handleRequestErrors(response) {
+    if (!response.ok) {
+      console.log(response);
+        throw Error(response.status);
+    }
+    return response.json();
   }
 
   componentDidMount() {
@@ -49,7 +59,7 @@ class App extends Component {
 
     fetch(venuesEndpoint + new URLSearchParams(params), {
       method: 'GET'
-    }).then(response => response.json()).then(response => {
+    }).then(this.handleRequestErrors).then(response => {
       setVenueState({venues: response.response.groups[0].items, showVenues: response.response.groups[0].items}); //Set the components state
     });
   }
@@ -81,7 +91,7 @@ class App extends Component {
   }
 
   loadVenueList(){
-    this.setState({showVenues:this.state.venues, query:''})
+    this.setState({showVenues:this.state.venues, query:'', showingInfoWindow:false})
   }
   
   render() {
@@ -90,7 +100,7 @@ class App extends Component {
           <div className="row">
             <NavBar loadVenueList={this.loadVenueList}/>
             <SideMenu getVenues={this.getVenues}/>
-            <MapContainer venues={this.state.showVenues}/>
+            <MapContainer venues={this.state.showVenues} contexto={this} showingInfoWindow={this.state.showingInfoWindow} handleRequestErrors={this.handleRequestErrors}/>
             <SearchList venues={this.state.showVenues} searchByName={this.searchByName} searchById={this.searchById} query={this.state.query}/>
           </div>
           

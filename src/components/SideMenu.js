@@ -7,7 +7,7 @@ export default class SideMenu extends Component{
         return(
             <div>
                 <ul id="slide-out" className="sidenav">
-                    <li><a className="subheader"><h5>Natal Places</h5></a></li>
+                    <li><a href="#!" className="subheader"><h5>Natal Places</h5></a></li>
                     <li><div className="divider"></div></li>
                     <li><a className="waves-effect sidenav-close" href="#!" value="restaurant" onClick={() => props.getVenues('restaurant')}><i className="material-icons">restaurant</i>Restaurants</a></li>
                     <li><a className="waves-effect sidenav-close" href="#!" value="pubs" onClick={() => props.getVenues('pubs')}><i className="material-icons">local_bar</i>Pubs</a></li>

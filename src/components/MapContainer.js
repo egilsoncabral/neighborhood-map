@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import InfoWindowContent from './InfoWindowContent';
 import Loader from './Loader';
@@ -13,36 +12,25 @@ export class MapContainer extends Component {
 
   constructor(props) {
     
-    
     super(props);
     this.state = {
-      showingInfoWindow: false,  //Hides or the shows the infoWindow
-      activeMarker: {}          //Shows the active marker upon click
+      activeMarker: {},          //Shows the active marker upon click
+      selectedVenue:null
     };
     
-    this.createInfoWindow = this.createInfoWindow.bind(this)
   }
 
-  // Load Map with restaurants markers
-  mapLoad(map) {
-    if(map !== null) {
-      this.setState({map: map});
-    }
-  }
-
-
-
-  getVenueDetail(contentId, marker) {
-    let infoWindow = this.createInfoWindow;
+  getVenueDetail(contentId) {
+    let currentContext = this;
     let url = new URL(`https://api.foursquare.com/v2/venues/${contentId}`);
     url.search = new URLSearchParams({client_id: 'BD0OWKRXZ0K4EYTMPEMGRBRY4ZJHSIKT5OXTAMQDTL0LMBDV', 
     client_secret: 'OMP2T5YLQ32NZIXLJBNXCDZI0U1PW3O5UXNXCGVE3AYVIPXC', v: "20181025"});
 
     Loader.showComponent()
     fetch(url)
-    .then(response => response.json()).then(response => {
+    .then(this.props.handleRequestErrors).then(response => {
       setTimeout(function() {
-        infoWindow(response.response.venue)
+        currentContext.setState({selectedVenue: response.response.venue})
       }, 800);
       
     });
@@ -51,17 +39,18 @@ export class MapContainer extends Component {
   onMarkerClick = (props, marker) => {
     this.setState({
       activeMarker: marker,
-      showingInfoWindow: true
+      selectedVenue:null
     });
+    this.props.contexto.setState({showingInfoWindow: true})
     this.getVenueDetail(props.item.venue.id, marker)
   }  
 
-  onClose = props => {
-    if (this.state.showingInfoWindow) {
+  onClose = () => {
+    if (this.props.showingInfoWindow) {
       this.setState({
-        showingInfoWindow: false,
         activeMarker: null
       });
+      this.props.contexto.setState({showingInfoWindow: false})
     }
   };
 
@@ -86,17 +75,9 @@ export class MapContainer extends Component {
     if (currentMap !== undefined && listMarkers.length > 1) {
       currentMap.map.fitBounds(bounds)
     }
+
     
     return listMarkers;
-  }
-
-  createInfoWindow(venue){
-    let infoContent = []
-    infoContent.push(
-      <InfoWindowContent venue={venue}/>
-    )
-    Loader.hideComponent()
-    ReactDOM.render(infoContent, document.getElementById('info-window-content'));
   }
 
   render() {
@@ -114,14 +95,17 @@ export class MapContainer extends Component {
           }}
         >
           {this.createMarkers()}
+          
+          
           <InfoWindow
           marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow}
+          visible={this.props.showingInfoWindow}
           onClose={this.onClose}
-        >
-          <div id="info-window-content">
+        ><div id="info-window-content">
+              <InfoWindowContent venue={this.state.selectedVenue}/>
           </div>
-        </InfoWindow>
+          </InfoWindow>
+        
         </Map>
         <Loader/>
        </div>
