@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import InfoWindowContent from './InfoWindowContent';
 import Loader from './Loader';
+import PropTypes from 'prop-types';
 
 const mapStyles = {
   width: '100%',
@@ -14,12 +15,13 @@ export class MapContainer extends Component {
     
     super(props);
     this.state = {
-      activeMarker: null,          //Shows the active marker upon click
-      selectedVenue:null
+      activeMarker: null,  
+      selectedVenue:null   
     };
     
   }
 
+  //Retrieve venue detail for InfoWindow
   getVenueDetail(contentId, marker) {
     let currentContext = this;
     let url = new URL(`https://api.foursquare.com/v2/venues/${contentId}`);
@@ -31,10 +33,15 @@ export class MapContainer extends Component {
       setTimeout(function() {
         currentContext.setState({selectedVenue: response.response.venue})
       }, 800);
-      
+    }).catch((error) =>{
+      const externalContext=this;
+       setTimeout(function() {
+        externalContext.props.handleToasts(error);
+      }, 1200);
     });
   } 
 
+  //Get the details of the selected venue
   onMarkerClick = (props, marker) => {
     this.setState({
       activeMarker: marker,
@@ -44,10 +51,7 @@ export class MapContainer extends Component {
     this.getVenueDetail(props.item.venue.id, marker)
   } 
   
-  componentWillUpdate(){
-    
-  }
-
+  //Close the infoWindow
   onClose = () => {
     if (this.props.showingInfoWindow) {
       this.setState({
@@ -57,6 +61,7 @@ export class MapContainer extends Component {
     }
   };
 
+  //Create all markers by the selected categorie
   createMarkers() {
     Loader.hideComponent()
     //create bounds for the map with the actual markers
@@ -79,8 +84,6 @@ export class MapContainer extends Component {
     if (currentMap !== undefined && listMarkers.length > 1) {
       currentMap.map.fitBounds(bounds)
     }
-
-    
     return listMarkers;
   }
 
@@ -116,6 +119,14 @@ export class MapContainer extends Component {
     );
   }
 }
+
+MapContainer.propTypes ={
+  venues: PropTypes.array.isRequired,
+  contexto: PropTypes.object.isRequired,
+  showingInfoWindow: PropTypes.bool.isRequired,
+  handleRequestErrors: PropTypes.func.isRequired,
+  handleToasts: PropTypes.func.isRequired,
+};
 
 export default GoogleApiWrapper({
   apiKey: 'AIzaSyCBFP2R5y7iwZG2T3lh2xdIhV0EC77iDFk'

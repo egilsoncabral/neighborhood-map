@@ -1,0 +1,10 @@
+#toast-container {
+    min-width: 10%;
+    top: 90%;
+    right: 50%;
+    transform: translateX(50%) translateY(50%);
+}
+
+.error-message {
+    background-color: red;
+}

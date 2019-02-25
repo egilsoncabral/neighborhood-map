@@ -3,7 +3,7 @@ import M from 'materialize-css'
 import $ from 'jquery'
 import '../assets/css/modal.css'
 
-
+//Used to show the user that something is loading
 export default class Loader extends Component{
     
     componentDidMount(){
@@ -14,6 +14,7 @@ export default class Loader extends Component{
       element.open()
     }
 
+    //hide loader
     static hideComponent(){
         $('.modalPreloader').attr('style','display:none !important');
         $('.modal').attr('style','display:none !important');
@@ -21,6 +22,7 @@ export default class Loader extends Component{
         $('.modal-overlay').hide()
     }
 
+    //show the loader
     static showComponent(){
         $('#modalPreloader').show()
     }
