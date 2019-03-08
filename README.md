@@ -1,6 +1,6 @@
-# Natal City Places Map - Nanodegree Udacity
+# Natal City Places Map 
 
-This project, is part of the training Nanodegree of Udacity. The goal of the project was to use React, the Google Maps API, plus data from a third-party API, to create a web application which you will show a list with the main cities in Natal-RN according to the selected category. Among the available categories it is possible to choose among "restaurant, mall, pubs, among others. It is still possible to filter by a specific place according to its category.
+The goal of the project was to use React, the Google Maps API, plus data from a third-party API, to create a web application which you will show a list with the main cities in Natal-RN according to the selected category. Among the available categories it is possible to choose among "restaurant, mall, pubs, among others. It is still possible to filter by a specific place according to its category.
 
 
 ## Build/Usage
